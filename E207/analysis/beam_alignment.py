@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 from scipy.optimize import curve_fit # type: ignore
 from uncertainties import ufloat, unumpy
 
-data = np.loadtxt("beam_alignment_C3_x.txt", skiprows=1)
+data = np.loadtxt("beam_alignment_C3_z.txt", skiprows=1)
 currents = data[:, 0]
 currents_err = np.array(len(currents) * [0.0005])  # constant error
 offsets1 = unumpy.uarray(data[:, 1], data[:, 2])
@@ -33,7 +33,7 @@ plt.plot(
     currents,
     func(currents, *popt),
     "r-",
-    label=r"fit: $\Delta x(I)=(%.4g \pm %.2g)\, \frac{\text{mm}}{\text{A}} \cdot I + (%.4g \pm %.2g)\, \text{mm}$"
+    label=r"fit: $\Delta z(I)=(%.4g \pm %.2g)\, \frac{\text{mm}}{\text{A}} \cdot I + (%.2g \pm %.2g)\, \text{mm}$"
     % (popt[0], perr[0], popt[1], perr[1]),
 )
 plt.errorbar(
@@ -47,7 +47,7 @@ plt.errorbar(
     label="data",
 )
 plt.xlabel(r"$I$ in A")
-plt.ylabel(r"$\Delta x$ in mm")
+plt.ylabel(r"$\Delta z$ in mm")
 plt.grid()
 plt.legend()
 plt.show()
