@@ -37,36 +37,31 @@ rand_coinc_rate = ufloat(0.175, 0.009)
 UC_rate = UC_rate * K - rand_coinc_rate
 
 
-# def func(theta, A, B, C):
-#    return A * (1 + B * np.cos(theta * np.pi / 180) ** 2 + C * np.cos(theta * np.pi / 180) ** 4)
-
-def func(theta, A, A22, A44):
-    return A * (1 + A22 * eval_legendre(2, np.cos(theta * np.pi / 180)) + A44 * eval_legendre(4, np.cos(theta * np.pi / 180)))
-
-
-popt, pcov = curve_fit(func, angles, unumpy.nominal_values(UC_rate), sigma=unumpy.std_devs(UC_rate))
-perr = np.sqrt(np.diag(pcov))
-
-A22 = ufloat(popt[1], perr[1])
-A44 = ufloat(popt[2], perr[2])
-print(A22)
-print(A44)
-
-Q2 = 0.90515
-Q4 = 0.7100
-print(A22 / Q2**2)
-print(A44 / Q4**2)
-
-res = func(angles, *popt) - unumpy.nominal_values(UC_rate)
-chi2 = np.sum(res**2 / unumpy.std_devs(UC_rate)**2)
-chi2_ndf = chi2 / (len(res) - len(popt))
-
 theta = np.linspace(angles[0], angles[-1], 1000)
 
+
+B_list = [1, -3, -15/13, 1/8]
+C_list = [0, 4, 16/13, 1/24]
+cascades = ["0(1)1(1)0", "0(2)0(2)0", "2(2)2(2)0", "4(2)2(2)0"]
+
+for i in range(len(cascades)):
+    def func(theta, A):
+        B = B_list[i]
+        C = C_list[i]
+        return A * (1 + B * np.cos(theta * np.pi / 180) ** 2 + C * np.cos(theta * np.pi / 180) ** 4)
+
+    popt, pcov = curve_fit(func, angles, unumpy.nominal_values(UC_rate), sigma=unumpy.std_devs(UC_rate))
+    perr = np.sqrt(np.diag(pcov))
+
+    res = func(angles, *popt) - unumpy.nominal_values(UC_rate)
+    chi2 = np.sum(res**2 / unumpy.std_devs(UC_rate)**2)
+    chi2_ndf = chi2 / (len(res) - len(popt))
+
+    plt.plot(theta, func(theta, *popt), label=r"%s, $\chi^2/\text{ndf} = %.2f$" %(cascades[i], chi2_ndf))
+
 plt.errorbar(angles, unumpy.nominal_values(UC_rate), unumpy.std_devs(UC_rate), fmt="None", ecolor="k", capsize=2, label="data")
-plt.plot(theta, func(theta, *popt), "r-", label=r"fit, $\chi^2/\text{ndf} = %.2f$" %chi2_ndf)
 plt.xlabel(r"$\theta$ / °")
 plt.ylabel(r"coincidence rate / $\text{s}^{-1}$")
-plt.legend()
+plt.legend(loc = "lower center")
 plt.grid()
 plt.show()

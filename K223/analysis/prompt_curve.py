@@ -11,6 +11,9 @@ delay = delay2 - delay1
 counts = data[:, 2]
 counts_err = np.sqrt(counts)
 
+indices = np.argsort(delay)
+np.savetxt("prompt_curve_table.txt", np.vstack([delay[indices], counts[indices], counts_err[indices]]).T, fmt="%1.0f")
+
 def func(t, A, A0, t0, w, sigma):
     return 0.5 * A * (1 + erf((t - (t0 - w / 2)) / sigma) * erf(((t0 + w / 2) - t) / sigma)) + A0
 
