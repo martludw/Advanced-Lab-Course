@@ -1,0 +1,2 @@
+This is the repository of Amelia de Lope and Martin Ludwig for the Advanced Lab Course (University of Bonn, Summer Term 2025).
+Each folder holds the materials for a single experiment: measured data, analysis code, and the final report.
