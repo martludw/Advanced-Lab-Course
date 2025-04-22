@@ -1,0 +1,10 @@
+data/
+notebooks/examplepplot.pdf
+notebooks/gaussfit.pdf
+notebooks/simple.bin
+notebooks/simple.csv
+notebooks/DataPairOfChargedPions.xls
+notebooks/MatplotlibExample.ipynb
+notebooks/NumpyExample.ipynb
+notebooks/PandasExample.ipynb
+notebooks/PhysicsExample.ipynb
